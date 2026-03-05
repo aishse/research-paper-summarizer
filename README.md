@@ -27,7 +27,6 @@ pip install requests pypdfium2 python-dotenv
 2. Create a `.env` file in the project root:
 ```
 NGC_API_KEY=your_nvidia_api_key_here
-SUMMARY_PROMPT=Your custom summary prompt here
 ```
 
 ## Usage
