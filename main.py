@@ -4,6 +4,7 @@ import json
 import os
 import requests
 import hashlib
+import sys
 import pypdfium2 as pdfium
 from dotenv import load_dotenv
 from concurrent.futures import ThreadPoolExecutor, as_completed
@@ -11,7 +12,16 @@ import subprocess
 
 load_dotenv()
 
+prompt = """You are summarizing an academic paper for a knowledgeable reader. Structure your summary as follows:
 
+1. **Overview** — what problem the paper addresses and why it matters
+2. **Methods** — how the research was conducted
+3. **Results & Data** — key findings, with data and figures explained
+4. **Limitations & Future Work** — if mentioned in the paper
+5. **Key Terms** — definitions of important acronyms, abbreviations, and technical terms
+6. **Equations** — explanations of any important formulas and their significance
+
+Preserve citations where referenced. Be as detailed as necessary for full understanding, but avoid unnecessary jargon. Write for a wide audience while maintaining accuracy."""
 nvai_url = "https://integrate.api.nvidia.com/v1/chat/completions"
 headers = {
     "Authorization": f"Bearer {os.environ.get('NGC_API_KEY')}",
@@ -30,7 +40,7 @@ def summarize(full_text):
         "messages": [
             {
                 "role": "user",
-                "content": f"""{os.environ.get('SUMMARY_PROMPT')}\n\n{full_text}""",
+                "content": f"""{prompt}\n\n{full_text}""",
             }
         ],
         "max_tokens": 4096,
@@ -121,7 +131,12 @@ def process_page(args):
             return ""
 
 if __name__ == "__main__":
-    extracted_text = parse_pdf("test2.pdf")
+    if len(sys.argv) < 2:
+        print("Usage: python main.py paper.pdf")
+        sys.exit(1)
+
+    file_path = sys.argv[1]
+    extracted_text = parse_pdf(file_path)
     if extracted_text:
         print("Extracted text successfully. Now summarizing...")
         summary = summarize(extracted_text)
