@@ -84,7 +84,6 @@ PDF File → Page Rendering (2x scale) → Base64 Encoding → Parallel Processi
 ## Environment Variables
 
 - `NGC_API_KEY`: Your NVIDIA API key for authentication
-- `SUMMARY_PROMPT`: Custom prompt to guide the summarization model
 
 ## Output Files
 
@@ -104,7 +103,7 @@ To adjust performance or behavior:
 
 - **Change concurrency**: Modify `max_workers` in `ThreadPoolExecutor` (default: 5)
 - **Control extraction quality**: Adjust `render(scale=2)` value (higher = better quality, slower)
-- **Limit summary length**: Change `max_tokens` in the summarize function (default: 1024)
+- **Limit summary length**: Change `max_tokens` in the summarize function (default: 4096)
 - **Process different PDFs**: Update the filename in the `if __name__ == "__main__"` block
 
 ## Notes
