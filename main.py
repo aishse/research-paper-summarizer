@@ -7,6 +7,7 @@ import hashlib
 import pypdfium2 as pdfium
 from dotenv import load_dotenv
 from concurrent.futures import ThreadPoolExecutor, as_completed
+import subprocess
 
 load_dotenv()
 
@@ -32,7 +33,7 @@ def summarize(full_text):
                 "content": f"""{os.environ.get('SUMMARY_PROMPT')}\n\n{full_text}""",
             }
         ],
-        "max_tokens": 1024,
+        "max_tokens": 4096,
     }
     try:
         response = requests.post(nvai_url, headers=headers, json=inputs)
@@ -120,7 +121,7 @@ def process_page(args):
             return ""
 
 if __name__ == "__main__":
-    extracted_text = parse_pdf("europa.pdf")
+    extracted_text = parse_pdf("test2.pdf")
     if extracted_text:
         print("Extracted text successfully. Now summarizing...")
         summary = summarize(extracted_text)
@@ -128,5 +129,6 @@ if __name__ == "__main__":
             print("dumping summary to summary.md")
             with open("summary.md", "w") as f:
                 f.write(summary)
+            subprocess.run(["afplay", "/System/Library/Sounds/Glass.aiff"])
     else:
         print("An error occurred during text extraction. Summary not generated.")
